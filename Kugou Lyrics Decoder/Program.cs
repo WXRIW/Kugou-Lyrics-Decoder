@@ -8,6 +8,7 @@
             var encryptedLyrics = KugouDecoder.Decrypter.GetEncryptedLyrics("49037603", "92A72D6AAD4C1A4736169984EBB64ADB");
             var lyrics = KugouDecoder.Decrypter.DecryptLyrics(encryptedLyrics!);
             Console.WriteLine(lyrics);
+            Console.WriteLine(KugouDecoder.Decrypter.GetTranslationFromKrc(lyrics!));
         }
     }
 }
