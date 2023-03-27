@@ -49,7 +49,19 @@ namespace KugouDecoder
         public static bool CheckKrcTranslation(string krc)
         {
             if (!krc.Contains("[language:")) return false;
-            else return true;
+
+            try
+            {
+                var language = krc[(krc.IndexOf("[language:") + "[language:".Length)..];
+                language = language[..language.IndexOf(']')];
+                var decode = Encoding.ASCII.GetString(Convert.FromBase64String(language));
+
+                var translation = JsonSerializer.Deserialize<KugouTranslation>(decode);
+                if (translation!.Content!.Count > 0) return true;
+            }
+            catch { }
+
+            return false;
         }
 
         /// <summary>
