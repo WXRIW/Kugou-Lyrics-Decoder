@@ -42,6 +42,39 @@ namespace KugouDecoder
             }
         }
 
+        /// <summary>
+        /// 通过 ID 和 AccessKey 获取解密后的歌词
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="accessKey"></param>
+        /// <returns></returns>
+        public static async Task<string?> GetLyricsAsync(string id, string accessKey)
+        {
+            var encryptedLyrics = await GetEncryptedLyricsAsync(id, accessKey);
+            var lyrics = Decrypter.DecryptLyrics(encryptedLyrics!);
+            return lyrics;
+        }
+
+        /// <summary>
+        /// 通过 ID 和 AccessKey 获取加密的歌词
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="accessKey"></param>
+        /// <returns></returns>
+        public static async Task<string?> GetEncryptedLyricsAsync(string id, string accessKey)
+        {
+            var json = await new HttpClient().GetStringAsync($"https://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=krc&charset=utf8");
+            try
+            {
+                var response = JsonSerializer.Deserialize<KugouLyricsResponse>(json);
+                return response?.Content;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// 检查 KRC 中是否有翻译
@@ -95,6 +128,22 @@ namespace KugouDecoder
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 提取 KRC 中的翻译原始数据
+        /// </summary>
+        /// <param name="krc">KRC 歌词</param>
+        /// <returns>翻译 List，若无翻译，则返回 null</returns>
+        public static KugouTranslation? GetTranslationRawFromKrc(string krc)
+        {
+            if (!krc.Contains("[language:")) return null;
+
+            var language = krc[(krc.IndexOf("[language:") + "[language:".Length)..];
+            language = language[..language.IndexOf(']')];
+            var decode = Encoding.ASCII.GetString(Convert.FromBase64String(language));
+
+            return JsonSerializer.Deserialize<KugouTranslation>(decode);
         }
     }
 }
