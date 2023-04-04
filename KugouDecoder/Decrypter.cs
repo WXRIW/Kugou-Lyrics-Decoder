@@ -6,10 +6,10 @@ namespace KugouDecoder
 {
     public class Decrypter
     {
-        public readonly static byte[] DecryptKey = { 0x40, 0x47, 0x61, 0x77, 0x5e, 0x32, 0x74, 0x47, 0x51, 0x36, 0x31, 0x2d, 0xce, 0xd2, 0x6e, 0x69 };
+        protected readonly static byte[] DecryptKey = { 0x40, 0x47, 0x61, 0x77, 0x5e, 0x32, 0x74, 0x47, 0x51, 0x36, 0x31, 0x2d, 0xce, 0xd2, 0x6e, 0x69 };
 
         /// <summary>
-        /// 解密歌词
+        /// 解密 KRC 歌词
         /// </summary>
         /// <param name="encryptedLyrics">加密的歌词</param>
         /// <returns>解密后的 KRC 歌词</returns>
@@ -26,7 +26,7 @@ namespace KugouDecoder
             return res[1..];
         }
 
-        public static byte[] SharpZipLibDecompress(byte[] data)
+        protected static byte[] SharpZipLibDecompress(byte[] data)
         {
             var compressed = new MemoryStream(data);
             var decompressed = new MemoryStream();
