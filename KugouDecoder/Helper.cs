@@ -9,6 +9,8 @@ namespace KugouDecoder
 {
     public class Helper
     {
+        public readonly static HttpClient Client = new();
+
         /// <summary>
         /// 通过 ID 和 AccessKey 获取解密后的歌词
         /// </summary>
@@ -30,7 +32,7 @@ namespace KugouDecoder
         /// <returns></returns>
         public static string? GetEncryptedLyrics(string id, string accessKey)
         {
-            var json = new HttpClient().GetStringAsync($"https://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=krc&charset=utf8").Result;
+            var json = Client.GetStringAsync($"https://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=krc&charset=utf8").Result;
             try
             {
                 var response = JsonSerializer.Deserialize<KugouLyricsResponse>(json);
@@ -63,7 +65,7 @@ namespace KugouDecoder
         /// <returns></returns>
         public static async Task<string?> GetEncryptedLyricsAsync(string id, string accessKey)
         {
-            var json = await new HttpClient().GetStringAsync($"https://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=krc&charset=utf8");
+            var json = await Client.GetStringAsync($"https://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=krc&charset=utf8");
             try
             {
                 var response = JsonSerializer.Deserialize<KugouLyricsResponse>(json);
