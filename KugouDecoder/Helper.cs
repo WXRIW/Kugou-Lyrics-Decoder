@@ -110,7 +110,7 @@ namespace KugouDecoder
 
             var language = krc[(krc.IndexOf("[language:") + "[language:".Length)..];
             language = language[..language.IndexOf(']')];
-            var decode = Encoding.ASCII.GetString(Convert.FromBase64String(language));
+            var decode = Encoding.UTF8.GetString(Convert.FromBase64String(language));
 
             var translation = JsonSerializer.Deserialize<KugouTranslation>(decode);
 
@@ -143,7 +143,7 @@ namespace KugouDecoder
 
             var language = krc[(krc.IndexOf("[language:") + "[language:".Length)..];
             language = language[..language.IndexOf(']')];
-            var decode = Encoding.ASCII.GetString(Convert.FromBase64String(language));
+            var decode = Encoding.UTF8.GetString(Convert.FromBase64String(language));
 
             return JsonSerializer.Deserialize<KugouTranslation>(decode);
         }
